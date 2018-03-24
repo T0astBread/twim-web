@@ -74,8 +74,8 @@ export default class MessageList extends React.Component {
                     </li>)
                 return <ul style={styles.convList}>{innerList}</ul>
             }
-            else if(this.state.errorCode) {
-                return <ErrorDisplay errorCode={this.state.errorCode} message={this.state.message}/>
+            else if(this.state.error) {
+                return <ErrorDisplay error={this.state.error}/>
             }
         }
         else {
@@ -87,13 +87,14 @@ export default class MessageList extends React.Component {
     load() {
         let rq = new XMLHttpRequest()
         rq.open("GET", "http://local.t0ast.cc/list", true)
+        rq.setRequestHeader("Identity", this.props.credentials.token + " " + this.props.credentials.secret)
         rq.onload = evt => {
             let response = JSON.parse(rq.response)
             if(rq.status === 200) {
                 this.setState({conversations: response})
             }
             else {
-                this.setState(response) //{errorCode: "...", message: "..."}
+                this.setState({...this.state, error: {code: response.errorCode, message: response.message}})
             }
         }
         rq.send(null)
