@@ -87,7 +87,7 @@ export default class MessageList extends React.Component {
     load() {
         let rq = new XMLHttpRequest()
         rq.open("GET", "http://local.t0ast.cc/list", true)
-        rq.setRequestHeader("Identity", this.props.credentials.token + " " + this.props.credentials.secret)
+        rq.setRequestHeader("Identity", [this.props.credentials.token, this.props.credentials.secret, this.props.credentials.userId].join(" "))
         rq.onload = evt => {
             let response = JSON.parse(rq.response)
             if(rq.status === 200) {
